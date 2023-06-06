@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>PFC</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./dist/reset.css" />
+    <link rel="stylesheet" href="./dist/reveal.css" />
+    <link rel="stylesheet" href="./dist/theme/black.css" id="theme" />
+    <link rel="stylesheet" href="./css/highlight/tomorrow-night-bright.css" />
+
+
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides"><section  data-markdown><script type="text/template">
+
+# 预测函数控制 PFC
+
+胡弈南
+
+</script></section><section  data-markdown><script type="text/template">
+
+## 常用预测控制算法
+
+- 动态矩阵控制
+- 模型算法控制
+- 广义预测控制
+- <font color="orange">预测函数控制</font>
+<!-- .element: class="fragment" -->
+- 滚动时域控制
+
+</script></section><section ><section data-markdown><script type="text/template">
+
+## 产生背景
+
+- 预测控制算法在复杂工业过程中取得了大量成功应用
+- 预测控制算法计算量大，应用局限于慢速过程
+
+</script></section><section data-markdown><script type="text/template">
+
+## PFC 算法的创新性
+
+- 与传统控制预测方法相同，具有 <font color="orange">预测模型</font> $\to$ <font color="orange">滚动优化</font> $\to$ <font color="orange">反馈校正</font> 的三段式结构
+- 注重控制量的结构形式，认为控制量是一组预先选定的<font color="orange">基函数</font>的线性组合
+
+</script></section><section data-markdown><script type="text/template">
+
+### PFC 算法的优势
+
+- 算法简单
+- 计算量小
+- 跟踪快速
+- 精度高
+
+</script></section></section><section ><section data-markdown><script type="text/template">
+
+## 基本原理：基函数
+
+$$u(n+i)=\sum _{j=1}^{N} \mu_j f_j(i)$$
+
+$u(n+i)$ 为在 $n+i$ 时刻的控制量，$f_j(i)$ 为基函数在第 $i$ 个采样周期时刻的值，$\mu_j$ 为待优化计算的权重
+
+</script></section><section data-markdown><script type="text/template">
+
+基函数可以选取阶跃、斜坡、抛物线、指数函数、三角函数等形式
+
+当设定值在预测时域内为恒定值或者变化率小于或等于某给定值时，控制输入可以采用阶跃响应函数，即仅采用一个基函数
+
+当设定值在被控时域内为斜坡形式或者变化率大于某给定值时，控制变量可以取阶跃函数与斜坡函数的加权形式，即采用两个基函数
+
+</script></section><section data-markdown><script type="text/template">
+
+输入引起的输出变化表现为不同基函数的输出响应的线性组合，对于选定的基函数组，可以离线算出输出响应
+
+$$ y_f(n+i)=\sum_{j=1}^{N}\mu_j y_j(i) $$
+
+$y_f(n+i)$ 为在 $n+i$ 时刻的受迫输出响应
+
+</script></section></section><section  data-markdown><script type="text/template">
+
+## 基本原理：参考轨迹
+
+预测函数控制与模型算法控制类似，在控制过程中使过程输出量逐渐跟踪参考轨迹值
+
+参考轨迹往往是一条指数曲线
+
+$$y_r(n+i)=y_{set}(n+i)-\alpha_r^i(y_{set}(n)-y(n))$$
+
+$y_r$ 为参考轨迹，$y_{set}$ 为设定跟踪值，$y$ 为过程实际值
+
+</script></section><section  data-markdown><script type="text/template">
+
+## 基本原理：滚动优化
+
+$$\sum_{i=1}^P(y_p(n+i)-y_r(n+i))^2$$
+
+寻找 $(\mu_1, \mu_2, ..., \mu_n)$ 使得误差最小
+
+</script></section><section  data-markdown><script type="text/template">
+
+## 应用实例
+
+浙江大学工业控制技术研究所的潘红华等老师基于 PFC 对工业电加热炉的控制的结果如图所示：
+
+<table>
+    <tr>
+        <td><img src=QQ截图20230606154232.png border=0></td>
+        <td><img src=QQ截图20230606154255.png border=0></td>
+    </tr>
+    <tr>
+        <td><img src=QQ截图20230606154303.png border=0></td>
+        <td><img src=QQ截图20230606154312.png border=0></td>
+    </tr>
+</table>
+
+</script></section><section  data-markdown><script type="text/template">
+
+## 感谢聆听！
+</script></section></div>
+    </div>
+
+    <script src="./dist/reveal.js"></script>
+
+    <script src="./plugin/markdown/markdown.js"></script>
+    <script src="./plugin/highlight/highlight.js"></script>
+    <script src="./plugin/zoom/zoom.js"></script>
+    <script src="./plugin/notes/notes.js"></script>
+    <script src="./plugin/math/math.js"></script>
+    <script>
+      function extend() {
+        var target = {};
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
+          for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      }
+
+      // default options to init reveal.js
+      var defaultOptions = {
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        slideNumber: true,
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealZoom,
+          RevealNotes,
+          RevealMath
+        ]
+      };
+
+      // options from URL query string
+      var queryOptions = Reveal().getQueryHash() || {};
+
+      var options = extend(defaultOptions, {"width":1520,"height":950,"margin":0.04,"transition":"convex","slideNumber":true}, queryOptions);
+    </script>
+
+
+    <script>
+      Reveal.initialize(options);
+    </script>
+  </body>
+</html>
